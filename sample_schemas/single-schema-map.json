@@ -1,0 +1,10 @@
+{
+  "schemas": [
+    {
+      "schemaName": "helloKERI",
+      "schemaFilePath": "hello-keri-schema.json",
+      "dependencies": [],
+      "edgeName": ""
+    }
+  ]
+}

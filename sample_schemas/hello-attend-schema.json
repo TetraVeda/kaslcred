@@ -1,0 +1,214 @@
+{
+  "$id": "",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Hello Attendance Credential",
+  "description": "Proof of your attendance at Abydos.",
+  "type": "object",
+  "credentialType": "HelloAttend",
+  "version": "1.0.0",
+  "properties": {
+    "v": {
+      "description": "Credential Version",
+      "type": "string"
+    },
+    "d": {
+      "description": "Credential SAID",
+      "type": "string"
+    },
+    "u": {
+      "description": "One time use nonce - optional",
+      "type": "string"
+    },
+    "i": {
+      "description": "Issuee AID",
+      "type": "string"
+    },
+    "ri": {
+      "description": "Credential Registry Identifier",
+      "type": "string"
+    },
+    "s": {
+      "description": "Schema SAID",
+      "type": "string"
+    },
+    "a": {
+      "oneOf": [
+        {
+          "description": "Attributes block SAID",
+          "type": "string"
+        },
+        {
+          "$id": "",
+          "description": "Attributes block",
+          "type": "object",
+          "properties": {
+            "d": {
+              "description": "Attributes block SAID",
+              "type": "string"
+            },
+            "i": {
+              "description": "Issuee AID",
+              "type": "string"
+            },
+            "dt": {
+              "description": "Issuance date time",
+              "type": "string",
+              "format": "date-time"
+            },
+            "attendanceReceipt": {
+              "description": "Your Hello ACDC Chained Acceptance welcome message",
+              "type": "object",
+              "required": [
+                "attendanceDate",
+                "ticketNumber"
+              ],
+              "properties": {
+                "attendanceDate": {
+                  "description": "Date of attendance",
+                  "type": "string"
+                },
+                "ticketNumber": {
+                  "description": "The ID of the ticket used for attendance",
+                  "type": "number"
+                },
+                "vipTour": {
+                  "description": "whether or not the attendance was allowed VIP access",
+                  "type": "boolean"
+                },
+                "tourKind": {
+                  "description": "The kind of tour the attendance was for",
+                  "type": "string"
+                },
+                "tourGuide": {
+                  "description": "The name of individual who provided the tour experience",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "d",
+            "i",
+            "attendanceReceipt"
+          ]
+        }
+      ]
+    },
+    "e": {
+      "oneOf": [
+        {
+          "description": "Hello KERI Credential Edge SAID",
+          "type": "string"
+        },
+        {
+          "$id": "",
+          "description": "Edges block",
+          "type": "object",
+          "properties": {
+            "d": {
+              "description": "Edges block SAID",
+              "type": "string"
+            },
+            "helloAdmit": {
+              "description": "Edge of the Hello Admittance credential far node",
+              "type": "object",
+              "properties": {
+                "n": {
+                  "description": "ACDC SAID of the Hello Admittance credential far node",
+                  "type": "string"
+                },
+                "s": {
+                  "description": "Schema SAID of the Hello Admittance credential far node",
+                  "type": "string",
+                  "const": ""
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "n",
+                "s"
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "d",
+            "helloAdmit"
+          ]
+        }
+      ]
+    },
+    "r": {
+      "oneOf": [
+        {
+          "description": "Hello KERI Rules block SAID",
+          "type": "string"
+        },
+        {
+          "$id": "",
+          "description": "Hello KERI Rules block",
+          "type": "object",
+          "properties": {
+            "d": {
+              "description": "Rules block SAID",
+              "type": "string"
+            },
+            "usageDisclaimer": {
+              "description": "Usage Disclaimer",
+              "type": "object",
+              "properties": {
+                "l": {
+                  "description": "Associated legal language",
+                  "type": "string",
+                  "const": "Usage of a Hello ACDC Chain Acceptance Credential means you know how to chain ACDCs."
+                }
+              }
+            },
+            "issuanceDisclaimer": {
+              "description": "Issuance Disclaimer",
+              "type": "object",
+              "properties": {
+                "l": {
+                  "description": "Associated legal language",
+                  "type": "string",
+                  "const": "All issuing a Hello ACDC Chain Acceptance Credential complete the credentialing process required for entrance into Abydos."
+                }
+              }
+            },
+            "privacyDisclaimer": {
+              "description": "Privacy Disclaimer",
+              "type": "object",
+              "properties": {
+                "l": {
+                  "description": "Associated legal language",
+                  "type": "string",
+                  "const": "It is the sole responsibility of Holders as Issuees of a Hello ACDC Acceptance credential to present that credential in a privacy-preserving manner using the mechanisms provided in the Issuance and Presentation Exchange (IPEX) protocol specification and the Authentic Chained Data Container (ACDC) specification. https://github.com/WebOfTrust/IETF-IPEX and https://github.com/trustoverip/tswg-acdc-specification."
+                }
+              }
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "d",
+            "usageDisclaimer",
+            "issuanceDisclaimer",
+            "privacyDisclaimer"
+          ]
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "v",
+    "u",
+    "i",
+    "ri",
+    "s",
+    "d",
+    "r",
+    "a",
+    "e"
+  ]
+}
