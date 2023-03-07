@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "kaslcred"
-version = "0.0."
+version = "0.0.6"
 authors = [
     {name="Kent Bull", email="kent@tetraveda.com"},
     {name="Kevin Griffin", email="griffin.kev@gmail.com"}
