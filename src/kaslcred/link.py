@@ -26,8 +26,8 @@ def calc_eval_order(schemas: list[ACDCSchema], evaluation_order=[], popped=[]):
     :return: evaluation_order - the ordered list of schemas to evaluate
     """
     # evaluation_order is a list of schema names
-    if len(schemas) == 1:
-        return [schemas[0].schemaName]
+    # if len(schemas) == 1:
+    #     return [schemas[0].schemaName]
     if len(popped) > 0:
         schemas.extend(popped)
         popped = []
@@ -70,8 +70,8 @@ def calc_eval_order(schemas: list[ACDCSchema], evaluation_order=[], popped=[]):
         if popped_index != -1:
             schemas.remove(schemas[popped_index])
         return calc_eval_order(schemas, evaluation_order, popped)
-    popped.clear()
-    schemas.clear()
+
+
     new_order=[]
     for ord in evaluation_order:
         new_order.append(ord)
@@ -91,6 +91,7 @@ def link_schemas(schema_source_root, schemas: list[ACDCSchema]):
     evaluation_order = calc_eval_order(schemas, evaluation_order=[], popped=[])
     schema_results = {}
     saidified_schemas = []
+    print(f'evaluation order {evaluation_order} schema root {schema_source_root} schemas {schemas}')
     for schema_name in evaluation_order:
         schema = list(filter(lambda s: s.schemaName == schema_name, schemas))[0]
         saidified = construct_schema(schema, f'{schema_source_root}', schema_results)
