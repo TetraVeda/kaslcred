@@ -25,6 +25,7 @@ def calc_eval_order(schemas: list[ACDCSchema], evaluation_order=[], popped=[]):
              further towards the end of the order.
     :return: evaluation_order - the ordered list of schemas to evaluate
     """
+
     # evaluation_order is a list of schema names
     # if len(schemas) == 1:
     #     return [schemas[0].schemaName]
@@ -91,7 +92,6 @@ def link_schemas(schema_source_root, schemas: list[ACDCSchema]):
     evaluation_order = calc_eval_order(schemas, evaluation_order=[], popped=[])
     schema_results = {}
     saidified_schemas = []
-    print(f'evaluation order {evaluation_order} schema root {schema_source_root} schemas {schemas}')
     for schema_name in evaluation_order:
         schema = list(filter(lambda s: s.schemaName == schema_name, schemas))[0]
         saidified = construct_schema(schema, f'{schema_source_root}', schema_results)
@@ -130,8 +130,7 @@ def construct_schema(schema: ACDCSchema, schema_root_path: str, schema_results: 
     schema_source = __load(f'{schema_root_path}/{schema.schemaFilePath}')
     for edge, (said, edgeName) in edges.items():
         edge_name = edgeName if edgeName != '' and edgeName is not None else edge
-        schema_source = update_schema_edge(edge_name,
-                                           schema_source, said)
+        schema_source = update_schema_edge(edge_name, schema_source, said)
     return populateSAIDS(schema_source)
 
 
@@ -158,10 +157,24 @@ def find_edge_index(edge_name, target_schema):
     :return: index of the specified edge name in the target schema.
     """
     if not (credential_type := target_schema['credentialType']):
-        raise RuntimeError(f'Malformed schema, missing credentialType attribute. Schema: {target_schema}')
+        raise ValueError(f'Malformed schema, missing credentialType attribute. Schema: {target_schema}')
     edge_idx = None
-    if schema := target_schema['properties']:
-        if edges := schema['e']:
+    if properties := target_schema['properties']:
+        if 'e' not in properties:
+            raise ValueError(f"""
+Missing expected edge {edge_name} in schema {credential_type}.
+Properties:
+{json.dumps(properties, indent=2)}
+Schema contents:
+{json.dumps(target_schema, indent=2)}""")
+        if edges := properties['e']:
+            if 'oneOf' not in edges:
+                raise ValueError(f"""
+Missing expected oneOf operator in edge {edge_name} for schema {credential_type}.
+Edge contents:
+{json.dumps(edges, indent=2)}
+Schema contents:
+{json.dumps(target_schema, indent=2)}""")
             if oneOf := edges['oneOf']:
                 for idx, edge in enumerate(oneOf):
                     try:
@@ -171,7 +184,7 @@ def find_edge_index(edge_name, target_schema):
                     except KeyError:
                         continue
                 if edge_idx is None:
-                    raise RuntimeError(f'Edge {edge_name} expected yet not found in target schema {credential_type}')
+                    raise ValueError(f'Edge {edge_name} expected yet not found in target schema {credential_type}')
     return edge_idx
 
 
@@ -198,7 +211,24 @@ def read_schema_map(schema_map_file_path: str) -> list[ACDCSchema]:
     """Read schema map file."""
     with open(schema_map_file_path, 'r') as file:
         data = json.load(file)
-        return [ACDCSchema(**k) for k in data["schemas"]]
+        schemas = [ACDCSchema(**k) for k in data["schemas"]]
+        valid, invalid_deps = validate_schemas(schemas)
+        if valid:
+            return schemas
+        else:
+            raise ValueError(f'Invalid schema dependencies found: {invalid_deps}')
+
+
+def validate_schemas(schemas: list[ACDCSchema]) -> bool:
+    schema_names = [schema.schemaName for schema in schemas]
+    dependencies = [dep for schema in schemas for dep in schema.dependencies]
+    invalid_dependencies = []
+    valid = True
+    for dep in dependencies:
+        if dep not in schema_names:
+            invalid_dependencies.append(dep)
+            valid = False
+    return valid, invalid_dependencies
 
 
 def populateSAIDS(schema: dict, idage: str = coring.Ids.dollar,
