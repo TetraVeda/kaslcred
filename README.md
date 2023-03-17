@@ -24,16 +24,46 @@ python -m kaslcred ${KASL_HOME}/schemas ${KASL_HOME}/results ${KASL_HOME}/schema
 4. Install KASLcred
 
 ### Dependencies
+
+KASLCred depends on the following libraries being installed:
+
 Rust toolchain (for Blake3 dependency)
-Libsodium
-KERI
+
+#### Libsodium
+
+The Homebrew installation of Libsodium is not sufficient, or did not work for me. I had to do the following instructions like stated in Libsodium's Gitbook [Installation documentation](https://libsodium.gitbook.io/doc/installation)
+
+Download a tarball of libsodium, preferably the latest stable version, then follow the ritual:
+```bash
+./configure
+make && make check
+sudo make install
+```
+
+
+#### [KERIpy](https://github.com/WebOfTrust/keripy) version 1.0.0
+
+```bash
+python -m pip install keri=1.0.0
+``` 
+
+KERIpy further depends on the following set of dependencies being installed:
+
+#### [Rust](https://www.rust-lang.org/tools/install) v1.60+
+
+This is required for Blake3 dependency in KERI to be able to build.
+```bash
+# the "-s -- -y" options are for a silent, unattended install. Omit them if you want to configure the install.
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+# Remember to set the PATH variable to include the Cargo binary directory like so:  PATH="$HOME/.cargo/bin:$PATH
+```
+
 
 
 ## Development
-Building
+
+Installing from the root repo directory:
 
 ``` shell
-python3 -m build
-
-python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps kaslcred
+python3 -m pip install -e ./
 ```
