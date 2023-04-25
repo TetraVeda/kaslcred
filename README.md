@@ -62,6 +62,10 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 ## Development
 
+Make sure to create a local environment with Pipenv.
+
+Then install the Python build tool with `pip install build` and the release tool with `pip install twine`.
+
 Installing from the root repo directory:
 
 ``` shell
