@@ -108,10 +108,10 @@ def save_schemas(saidified_schemas: list, schema_results_dir, pretty: bool):
 
 def get_schema_said(schema):
     """Get SAID for target schema using default ID symbol."""
-    if not schema[coring.Saids.dollar] or schema[coring.Saids.dollar] == "":
+    if not schema[coring.Ids.dollar] or schema[coring.Ids.dollar] == "":
         raise RuntimeError(
-            f'Cannot get schema SAID: {coring.Saids.dollar} attribute empty or missing from schema {schema}')
-    return schema[coring.Saids.dollar]
+            f'Cannot get schema SAID: {coring.Ids.dollar} attribute empty or missing from schema {schema}')
+    return schema[coring.Ids.dollar]
 
 
 def construct_schema(schema: ACDCSchema, schema_root_path: str, schema_results: dict):
@@ -231,7 +231,7 @@ def validate_schemas(schemas: list[ACDCSchema]) -> bool:
     return valid, invalid_dependencies
 
 
-def populateSAIDS(schema: dict, idage: str = coring.Saids.dollar,
+def populateSAIDS(schema: dict, idage: str = coring.Ids.dollar,
                   code: str = coring.MtrDex.Blake3_256):
     """
     Calculate and write self addressing identifiers (SAIDS).
