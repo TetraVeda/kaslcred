@@ -1,4 +1,4 @@
-from kaslcred.link import ACDCSchema, calc_eval_order, read_schema_map, link_schemas
+from src.kaslcred.link import ACDCSchema, calc_eval_order, read_schema_map, link_schemas
 
 
 def test_calc_eval_order():
@@ -13,6 +13,7 @@ def test_calc_eval_order():
 
 
 def test_link_schemas():
+    print("test works")
     schema_map = read_schema_map("./sample_schemas/single-schema-map.json")
     results = link_schemas("./sample_schemas", schema_map)
     assert len(results) == 1

@@ -108,10 +108,10 @@ def save_schemas(saidified_schemas: list, schema_results_dir, pretty: bool):
 
 def get_schema_said(schema):
     """Get SAID for target schema using default ID symbol."""
-    if not schema[coring.Ids.dollar] or schema[coring.Ids.dollar] == "":
+    if not schema[coring.Saids.dollar] or schema[coring.Saids.dollar] == "":
         raise RuntimeError(
-            f'Cannot get schema SAID: {coring.Ids.dollar} attribute empty or missing from schema {schema}')
-    return schema[coring.Ids.dollar]
+            f'Cannot get schema SAID: {coring.Saids.dollar} attribute empty or missing from schema {schema}')
+    return schema[coring.Saids.dollar]
 
 
 def construct_schema(schema: ACDCSchema, schema_root_path: str, schema_results: dict):
@@ -125,7 +125,7 @@ def construct_schema(schema: ACDCSchema, schema_root_path: str, schema_results: 
     """
     for dep in schema.dependencies:
         if dep not in schema_results:
-            raise RuntimeError(f'Schema {schema.schemaName} depends on schema {key} and it was not in results dict.')
+            raise RuntimeError(f'Schema {schema.schemaName} depends on schema {dep} and it was not in results dict.')
     edges = {key: schema_results[key] for key in schema.dependencies}
     schema_source = __load(f'{schema_root_path}/{schema.schemaFilePath}')
     for edge, (said, edgeName) in edges.items():
@@ -219,7 +219,7 @@ def read_schema_map(schema_map_file_path: str) -> list[ACDCSchema]:
             raise ValueError(f'Invalid schema dependencies found: {invalid_deps}')
 
 
-def validate_schemas(schemas: list[ACDCSchema]) -> bool:
+def validate_schemas(schemas: list[ACDCSchema]) -> tuple[bool, list]:
     schema_names = [schema.schemaName for schema in schemas]
     dependencies = [dep for schema in schemas for dep in schema.dependencies]
     invalid_dependencies = []
@@ -231,7 +231,7 @@ def validate_schemas(schemas: list[ACDCSchema]) -> bool:
     return valid, invalid_dependencies
 
 
-def populateSAIDS(schema: dict, idage: str = coring.Ids.dollar,
+def populateSAIDS(schema: dict, idage: str = coring.Saids.dollar,
                   code: str = coring.MtrDex.Blake3_256):
     """
     Calculate and write self addressing identifiers (SAIDS).
