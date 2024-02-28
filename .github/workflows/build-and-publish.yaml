@@ -64,6 +64,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: python-package
+          path: kaslcred-dist/
 
       - name: List files in the current directory
         run: |
@@ -80,4 +81,4 @@ jobs:
           python -m pip install twine
 
       - name: Publish
-        run: twine upload python-package/*
+        run: twine upload kaslcred-dist/*
