@@ -71,4 +71,4 @@ jobs:
           python -m pip install twine
 
       - name: Publish
-        run: pipenv run twine upload dist/*
+        run: twine upload dist/*
