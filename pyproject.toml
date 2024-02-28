@@ -4,10 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 name = "kaslcred"
-version = "0.1.4"
+version = "0.1.5"
 authors = [
-    {name="Kent Bull", email="kent@tetraveda.com"},
-    {name="Kevin Griffin", email="griffin.kev@gmail.com"}
+    {name="Kent Bull", email="kent@tetraveda.com"}
 ]
 description = "A credential schema linker for the KERI and ACDC ecosystem."
 readme = "README.md"
@@ -18,7 +17,7 @@ classifiers = [
     "Operating System :: OS Independent"
 ]
 dependencies=[
-    "keri >= 1.0.0"
+    "keri >= 1.1.1"
 ]
 
 
