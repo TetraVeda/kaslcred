@@ -65,6 +65,10 @@ jobs:
         with:
           name: python-package
 
+      - name: List files in the current directory
+        run: |
+          ls -lah
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
@@ -76,4 +80,4 @@ jobs:
           python -m pip install twine
 
       - name: Publish
-        run: twine upload dist/*
+        run: twine upload python-package/*
