@@ -16,6 +16,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment:
+      name: publish-approval
     steps:
       - name: Download pacakge artifacts
         uses: actions/download-artifact@v3
