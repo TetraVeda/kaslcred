@@ -1,9 +1,14 @@
 ---
+name: Build and Test
+
+env:
+  GIT_SSH_KEY: ${{ secrets.GIT_SSH_KEY }}
+
 on:
   workflow_dispatch:
   push:
       branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -15,7 +20,7 @@ jobs:
         run: |
           mkdir $BUILD_PATH
           cd $BUILD_PATH
-          ssh-agent sh -c 'echo "$GITHUB_SSH_KEY" | ssh-add - && git clone $BASE_REPO && git clone $TARGET_REPO'
+          ssh-agent sh -c 'echo "$GIT_SSH_KEY" | ssh-add - && git clone $BASE_REPO && git clone $TARGET_REPO'
 
       - name: Resolve Version
         run: |
