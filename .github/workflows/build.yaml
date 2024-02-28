@@ -1,5 +1,5 @@
 ---
-name: Build and Test
+name: Build Package
 
 env:
   GIT_SSH_KEY: ${{ secrets.GIT_SSH_KEY }}
@@ -60,3 +60,9 @@ jobs:
 
       - name: Build
         run: pipenv run python -m build
+
+      - name: Archive package artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-package
+          path: dist/*
