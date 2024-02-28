@@ -1,9 +1,6 @@
 ---
 name: Build Package
 
-env:
-  GIT_SSH_KEY: ${{ secrets.GIT_SSH_KEY }}
-
 on:
   workflow_dispatch:
   push:
@@ -17,20 +14,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-#      - name: Setup SSH Agent
-#        uses: webfactory/ssh-agent@v0.5.3
-#        with:
-#          ssh-private-key: ${{ secrets.GIT_SSH_KEY }}
-#
-#      - name: Clone Required Repos
-#        run: git clone git@github.com:TetraVeda/kaslcred.git
-
-      - name: Resolve Version
-        run: |
-          IMAGE_VERSION=$(git describe --tags --abbrev=0)
-          echo "IMAGE_VERSION=$IMAGE_VERSION" >> $GITHUB_ENV
-          echo "building version $IMAGE_VERSION"
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -66,3 +49,26 @@ jobs:
         with:
           name: python-package
           path: dist/*
+
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: publish-approval
+    steps:
+      - name: Download pacakge artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: python-package
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install twine
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install twine
+
+      - name: Publish
+        run: pipenv run twine upload dist/*
