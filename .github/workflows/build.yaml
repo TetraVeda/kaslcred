@@ -1,0 +1,30 @@
+---
+on:
+  workflow_dispatch:
+  push:
+      branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Clone Required Repos
+        run: |
+          mkdir $BUILD_PATH
+          cd $BUILD_PATH
+          ssh-agent sh -c 'echo "$GITHUB_SSH_KEY" | ssh-add - && git clone $BASE_REPO && git clone $TARGET_REPO'
+
+      - name: Resolve Version
+        run: |
+          IMAGE_VERSION=$(git describe --tags --abbrev=0)
+          echo "IMAGE_VERSION=$IMAGE_VERSION" >> $GITHUB_ENV
+          echo "building version $IMAGE_VERSION"
+          
+      - name: Run tests
+        run: python -m pytest
+
+      - name: Build
+        run: python -m build
