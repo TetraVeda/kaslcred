@@ -15,12 +15,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Clone Required Repos
-        run: |
-          mkdir $BUILD_PATH
-          cd $BUILD_PATH
-          ssh-agent sh -c 'echo "$GIT_SSH_KEY" | ssh-add - && git clone $BASE_REPO && git clone $TARGET_REPO'
+#      - name: Setup SSH Agent
+#        uses: webfactory/ssh-agent@v0.5.3
+#        with:
+#          ssh-private-key: ${{ secrets.GIT_SSH_KEY }}
+#
+#      - name: Clone Required Repos
+#        run: git clone git@github.com:TetraVeda/kaslcred.git
 
       - name: Resolve Version
         run: |
