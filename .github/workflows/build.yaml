@@ -31,6 +31,9 @@ jobs:
           IMAGE_VERSION=$(git describe --tags --abbrev=0)
           echo "IMAGE_VERSION=$IMAGE_VERSION" >> $GITHUB_ENV
           echo "building version $IMAGE_VERSION"
+
+      - name: Install dependencies
+        run: PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
           
       - name: Run tests
         run: python -m pytest
