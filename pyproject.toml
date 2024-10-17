@@ -10,7 +10,7 @@ authors = [
 ]
 description = "A credential schema linker for the KERI and ACDC ecosystem."
 readme = "README.md"
-requires-python = "3.12.3"
+requires-python = "3.12"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: Apache Software License",
